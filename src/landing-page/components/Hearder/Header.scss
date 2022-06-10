@@ -3,6 +3,7 @@ header{
     justify-content: space-between;
     align-items: center;
     padding: 25px 108px;
+    background-color: #FFFFFF;
     // transition: all ease-in-out 0.5s;
     // box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     // box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
@@ -46,6 +47,10 @@ header{
                 background-color: #F74A53;
                 color: #F5F5F5;
             }
+        }
+
+        a .logo{
+            width: 200px;
         }
     }
 }

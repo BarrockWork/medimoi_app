@@ -1,9 +1,10 @@
 import "./Header.scss"
+import logo from "./logo.png"
 
 const Header = () => {
     return <header>
         <div>
-            Logo
+            <a href="/"> <img src={logo} className="logo" alt="logo" /> </a>
         </div>
         <ul>
             <li><a href="#1">Comment ça marche?</a></li>
