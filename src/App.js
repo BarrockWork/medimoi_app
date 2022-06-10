@@ -1,11 +1,7 @@
-import './App.css';
+import LandingPage from "./landing-page";
 
-function App() {
-    return (
-        <div>
-            Medi'Moi
-        </div>
-    );
+const App = () => {
+    return <LandingPage/>
 }
 
 export default App;
