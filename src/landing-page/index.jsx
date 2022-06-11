@@ -1,9 +1,11 @@
-import Header from "./components/Hearder";
+import Header from "./components/Header";
 
 const LandingPage = () => {
-    return <div>
-        <Header/>
-    </div>
-}
+    return (
+        <div>
+            <Header />
+        </div>
+    );
+};
 
 export default LandingPage;
