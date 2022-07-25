@@ -18,33 +18,8 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
-
-
-function createData(name, calories, fat, carbs, protein) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-  };
-}
-
-const rows = [
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Donut', 452, 25.0, 51, 4.9),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Honeycomb', 408, 3.2, 87, 6.5),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Jelly Bean', 375, 0.0, 94, 0.0),
-  createData('KitKat', 518, 26.0, 65, 7.0),
-  createData('Lollipop', 392, 0.2, 98, 0.0),
-  createData('Marshmallow', 318, 0, 81, 2.0),
-  createData('Nougat', 360, 19.0, 9, 37.0),
-  createData('Oreo', 437, 18.0, 63, 4.0),
-];
+import apiAxios from 'utils/axios';
+import { useState, useEffect } from 'react';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -81,31 +56,25 @@ const headCells = [
     id: 'name',
     numeric: false,
     disablePadding: true,
-    label: 'Dessert (100g serving)',
+    label: 'Nom',
   },
   {
-    id: 'calories',
+    id: 'periodicity',
     numeric: true,
     disablePadding: false,
-    label: 'Calories',
+    label: 'Périodicité',
   },
   {
-    id: 'fat',
+    id: 'startedAt',
     numeric: true,
     disablePadding: false,
-    label: 'Fat (g)',
+    label: 'Débute le',
   },
   {
-    id: 'carbs',
+    id: 'FinishedAt',
     numeric: true,
     disablePadding: false,
-    label: 'Carbs (g)',
-  },
-  {
-    id: 'protein',
-    numeric: true,
-    disablePadding: false,
-    label: 'Protein (g)',
+    label: 'Termnine le',
   },
 ];
 
@@ -159,15 +128,6 @@ function EnhancedTableHead(props) {
     </TableHead>
   );
 }
-
-EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
 
 const EnhancedTableToolbar = (props) => {
   const { numSelected, title } = props;
@@ -228,6 +188,17 @@ export default function EnhancedTable({ titre }) {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [treatments, setTreatments] = useState([]);
+  const getTreatment = async () => {
+    const results = await apiAxios.get(
+      '/treatments/all?filter={}&range=[0,10]&sort=["id","ASC"]'
+    );
+    setTreatments(results.data);
+  };
+
+  useEffect(() => {
+    getTreatment();
+  }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -237,7 +208,7 @@ export default function EnhancedTable({ titre }) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = treatments.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -277,7 +248,7 @@ export default function EnhancedTable({ titre }) {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - treatments.length) : 0;
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -291,25 +262,25 @@ export default function EnhancedTable({ titre }) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={treatments.length}
             />
             <TableBody>
               {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(treatments, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                .map((treatments, index) => {
+                  const isItemSelected = isSelected(treatments.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                      onClick={(event) => handleClick(event, treatments.name)}
                       role='checkbox'
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={treatments.name}
                       selected={isItemSelected}>
                       <TableCell padding='checkbox'>
                         <Checkbox
@@ -323,14 +294,14 @@ export default function EnhancedTable({ titre }) {
                       <TableCell
                         component='th'
                         id={labelId}
-                        scope='row'
+                        scope='treatments'
                         padding='none'>
-                        {row.name}
+                        {treatments.name}
                       </TableCell>
-                      <TableCell align='right'>{row.calories}</TableCell>
-                      <TableCell align='right'>{row.fat}</TableCell>
-                      <TableCell align='right'>{row.carbs}</TableCell>
-                      <TableCell align='right'>{row.protein}</TableCell>
+                      <TableCell align='right'></TableCell>
+                      <TableCell align='right'></TableCell>
+                      <TableCell align='right'></TableCell>
+                      <TableCell align='right'></TableCell>
                     </TableRow>
                   );
                 })}
@@ -345,13 +316,14 @@ export default function EnhancedTable({ titre }) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component='div'
-          count={rows.length}
+          count={treatments.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      {JSON.stringify(treatments)}
     </Box>
   );
 }
