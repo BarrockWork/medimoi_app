@@ -201,7 +201,6 @@ export default function EnhancedTable({ titre, isActive }) {
     getTreatment();
   }, []);
 
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -216,6 +215,7 @@ export default function EnhancedTable({ titre, isActive }) {
     }
     setSelected([]);
   };
+  const dateFormatter = (date) => new Date(date).toLocaleDateString();
 
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
@@ -304,10 +304,14 @@ export default function EnhancedTable({ titre, isActive }) {
                         {treatments.treatment_periodicity_id}
                       </TableCell>
                       <TableCell align='right'>
-                        {treatments.startedAt}
+                        {treatments.startedAt
+                          ? dateFormatter(treatments.startedAt)
+                          : ''}
                       </TableCell>
                       <TableCell align='right'>
-                        {treatments.finishedAt}
+                        {treatments.finishedAt
+                          ? dateFormatter(treatments.finishedAt)
+                          : ''}
                       </TableCell>
                     </TableRow>
                   );
