@@ -17,8 +17,16 @@ const Dashboard = () => {
   return (
     <Grid container spacing={gridSpacing}>
       <Grid item xs={12}>
-        <EnhancedTable isLoading={isLoading} titre='Traitements en cours' />
-        <EnhancedTable isLoading={isLoading} titre='Traitements terminés' />
+        <EnhancedTable
+          isLoading={isLoading}
+          titre='Traitements en cours'
+          isActive='true'
+        />
+        <EnhancedTable
+          isLoading={isLoading}
+          titre='Traitements terminés'
+          isActive='false'
+        />
       </Grid>
     </Grid>
   );

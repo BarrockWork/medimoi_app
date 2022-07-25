@@ -71,7 +71,7 @@ const headCells = [
     label: 'Débute le',
   },
   {
-    id: 'FinishedAt',
+    id: 'finishedAt',
     numeric: true,
     disablePadding: false,
     label: 'Termnine le',
@@ -182,16 +182,17 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function EnhancedTable({ titre }) {
+export default function EnhancedTable({ titre, isActive }) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [treatments, setTreatments] = useState([]);
+  const boolActive = isActive;
   const getTreatment = async () => {
     const results = await apiAxios.get(
-      '/treatments/all?filter={}&range=[0,10]&sort=["id","ASC"]'
+      `/treatments/all?filter={"isActive":${boolActive}}&range=[0,10]&sort=["id","ASC"]`
     );
     setTreatments(results.data);
   };
@@ -199,6 +200,7 @@ export default function EnhancedTable({ titre }) {
   useEffect(() => {
     getTreatment();
   }, []);
+
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -298,10 +300,15 @@ export default function EnhancedTable({ titre }) {
                         padding='none'>
                         {treatments.name}
                       </TableCell>
-                      <TableCell align='right'></TableCell>
-                      <TableCell align='right'></TableCell>
-                      <TableCell align='right'></TableCell>
-                      <TableCell align='right'></TableCell>
+                      <TableCell align='right'>
+                        {treatments.treatment_periodicity_id}
+                      </TableCell>
+                      <TableCell align='right'>
+                        {treatments.startedAt}
+                      </TableCell>
+                      <TableCell align='right'>
+                        {treatments.finishedAt}
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -323,7 +330,6 @@ export default function EnhancedTable({ titre }) {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      {JSON.stringify(treatments)}
     </Box>
   );
 }
