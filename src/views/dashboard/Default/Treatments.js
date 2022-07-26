@@ -20,6 +20,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import apiAxios from 'utils/axios';
 import { useState, useEffect } from 'react';
+import periodicity from 'views/utilities/periodicity';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -301,7 +302,7 @@ export default function EnhancedTable({ titre, isActive }) {
                         {treatments.name}
                       </TableCell>
                       <TableCell align='right'>
-                        {treatments.treatment_periodicity_id}
+                        {periodicity(treatments.treatment_periodicity_id)}
                       </TableCell>
                       <TableCell align='right'>
                         {treatments.startedAt
