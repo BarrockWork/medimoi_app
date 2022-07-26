@@ -20,7 +20,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import apiAxios from 'utils/axios';
 import { useState, useEffect } from 'react';
-import periodicity from 'views/utilities/periodicity';
+import periodicity from 'views/utilities/Periodicity';
+import { NavLink } from 'react-router-dom';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -277,44 +278,46 @@ export default function EnhancedTable({ titre, isActive }) {
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, treatments.name)}
-                      role='checkbox'
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={treatments.name}
-                      selected={isItemSelected}>
-                      <TableCell padding='checkbox'>
-                        <Checkbox
-                          color='primary'
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId,
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component='th'
-                        id={labelId}
-                        scope='treatments'
-                        padding='none'>
-                        {treatments.name}
-                      </TableCell>
-                      <TableCell align='right'>
-                        {periodicity(treatments.treatment_periodicity_id)}
-                      </TableCell>
-                      <TableCell align='right'>
-                        {treatments.startedAt
-                          ? dateFormatter(treatments.startedAt)
-                          : ''}
-                      </TableCell>
-                      <TableCell align='right'>
-                        {treatments.finishedAt
-                          ? dateFormatter(treatments.finishedAt)
-                          : ''}
-                      </TableCell>
-                    </TableRow>
+                    <NavLink to={`/treatment/detail/${treatments.id}`}>
+                      <TableRow
+                        hover
+                        onClick={(event) => handleClick(event, treatments.name)}
+                        role='checkbox'
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={treatments.name}
+                        selected={isItemSelected}>
+                        <TableCell padding='checkbox'>
+                          <Checkbox
+                            color='primary'
+                            checked={isItemSelected}
+                            inputProps={{
+                              'aria-labelledby': labelId,
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell
+                          component='th'
+                          id={labelId}
+                          scope='treatments'
+                          padding='none'>
+                          {treatments.name}
+                        </TableCell>
+                        <TableCell align='right'>
+                          {periodicity(treatments.treatment_periodicity_id)}
+                        </TableCell>
+                        <TableCell align='right'>
+                          {treatments.startedAt
+                            ? dateFormatter(treatments.startedAt)
+                            : ''}
+                        </TableCell>
+                        <TableCell align='right'>
+                          {treatments.finishedAt
+                            ? dateFormatter(treatments.finishedAt)
+                            : ''}
+                        </TableCell>
+                      </TableRow>
+                    </NavLink>
                   );
                 })}
               {emptyRows > 0 && (
