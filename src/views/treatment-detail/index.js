@@ -38,29 +38,42 @@ const TreatmentDetail = () => {
       <Box
         sx={{
           '& .MuiTextField-root': { m: 1, width: '25ch' },
+          padding: 3,
         }}>
-        <Typography variant='h2'>Periodicité</Typography>
+        <Typography sx={{ padding: 1 }} variant='h2'>
+          Periodicité
+        </Typography>
         <TextField
           id='outlined-multiline-flexible'
           label='Débute le'
           multiline
           maxRows={4}
-          value={dateFormatter(treatment.startedAt)}
+          value={
+            dateFormatter(treatment.startedAt) === '1/1/1970'
+              ? 'pas de date renseignée '
+              : dateFormatter(treatment.startedAt)
+          }
         />{' '}
         <TextField
           id='outlined-multiline-flexible'
           label='Termine le'
           multiline
           maxRows={4}
-          value={dateFormatter(treatment.finishedAt)}
+          value={
+            dateFormatter(treatment.finishedAt) === '1/1/1970'
+              ? 'pas de date de fin '
+              : dateFormatter(treatment.finishedAt)
+          }
         />
       </Box>
-      <Box>
+      <Box sx={{ padding: 3 }}>
         {' '}
-        <Typography variant='h2'>Medicaments</Typography>
+        <Typography sx={{ padding: 1 }} variant='h2'>
+          Medicaments
+        </Typography>
         {treatment.TreatmentDrugs === undefined ||
         treatment.TreatmentDrugs.length === 0 ? (
-          ''
+          'Pas de médicament enregistré'
         ) : (
           <TableContainer>
             <Table sx={{ minWidth: 650 }} aria-label='simple table'>
@@ -82,12 +95,14 @@ const TreatmentDetail = () => {
           </TableContainer>
         )}
       </Box>
-      <Box>
-        <Typography variant='h2'>Pieces jointes</Typography>
+      <Box sx={{ padding: 3 }}>
+        <Typography sx={{ padding: 1 }} variant='h2'>
+          Pieces jointes
+        </Typography>
 
         {treatment.TreatmentMedias === undefined ||
         treatment.TreatmentMedias.length === 0 ? (
-          ''
+          'Pas de média enregistré'
         ) : (
           <TableContainer>
             <Table sx={{ minWidth: 650 }} aria-label='simple table'>
