@@ -2,7 +2,9 @@
 import {Avatar, Card, CardContent, CardHeader, CircularProgress, IconButton, Link, Typography,} from '@mui/material';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
-
+import PersonIcon from '@mui/icons-material/Person';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 
@@ -12,6 +14,7 @@ import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
+import {NavLink} from "react-router-dom";
 
 // ==============================|| PROFIL USER ||============================== //
 
@@ -22,11 +25,11 @@ function MoreVertIcon() {
 const ProfilUser = () => {
     const [error, setError] = useState(false);
     const [user, setUser] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const token = localStorage.getItem("token");
+    const [loading, setLoading] = useState(true);
+    const id = localStorage.getItem("user-id");
     const getUser = async () => {
         try {
-            const results = await apiAxios.get('/users/3')
+            const results = await apiAxios.get(`/users/${id}`)
             setUser(results.data);
             setLoading(false);
         } catch (err) {
@@ -60,8 +63,8 @@ const ProfilUser = () => {
     let initials = user.firstName
 
 
-    return (<MainCard title={user.firstName + " " + user.lastName}>
-            <Card sx={{maxWidth: 345}}>
+    return (<MainCard title={user.firstName + " " + user.lastName} align='center'>
+            <Card sx={{maxWidth: 800}}>
                 <CardHeader
                     avatar={
                         <Avatar aria-label="recipe">
@@ -76,6 +79,10 @@ const ProfilUser = () => {
                     title="Inscrits depuis"
                     subheader={localDate}
                 />
+                <NavLink to={`/email/${user.email}`}>
+                    <EditIcon style={{ color: 'green' }}/>
+                </NavLink>
+                    <DeleteIcon style={{ color: 'red' }}/>
                 <CardContent>
                     <Table>
                         <TableBody>
@@ -94,6 +101,14 @@ const ProfilUser = () => {
                                     <ContactMailIcon/>
                                 </TableCell>
                                 <TableCell align='center'>{user.email}</TableCell>
+                            </TableRow>
+                            <TableRow
+                                key={user.UserType.id}
+                                sx={{'&:last-child td, &:last-child th': {border: 0}}}>
+                                <TableCell component='th' scope='row' align='center'>
+                                    <PersonIcon/>
+                                </TableCell>
+                                <TableCell align='center'>{user.UserType.name}</TableCell>
                             </TableRow>
                         </TableBody>
                     </Table>

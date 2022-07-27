@@ -25,6 +25,8 @@ const UtilsMaterialIcons = Loadable(
 const UtilsTablerIcons = Loadable(
   lazy(() => import('views/utilities/TablerIcons'))
 );
+const id = localStorage.getItem("user-id");
+
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -45,7 +47,7 @@ const MainRoutes = {
       element: <TestApiPage />,
     },
     {
-      path: '/profil',
+      path: `/profil/${id}`,
       element: <Profil />,
     },
     {

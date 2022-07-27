@@ -5,7 +5,7 @@ import {IconDashboard, IconAdjustments, IconUser} from '@tabler/icons';
 const icons = { IconDashboard, IconAdjustments, IconUser };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
-
+const id = localStorage.getItem("user-id");
 const dashboard = {
   id: 'dashboard',
   title: 'Accueil',
@@ -31,7 +31,7 @@ const dashboard = {
       id: 'my-profil',
       title: 'Profil',
       type: 'item',
-      url: '/profil',
+      url: `/profil/${id}`,
       icon: icons.IconUser,
       breadcrumbs: false,
     },
