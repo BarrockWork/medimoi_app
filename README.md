@@ -1,4 +1,4 @@
-# Médi'Moi - Dashboard
+# Médi'Moi - Front
 
 ## Introduction
 Application Front React pour l'Application cote client.
