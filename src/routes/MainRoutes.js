@@ -13,6 +13,10 @@ const DashboardDefault = Loadable(
 const TestApiPage = Loadable(lazy(() => import('views/test-api-page')));
 const Profil = Loadable(lazy(() => import('views/user')));
 
+const DetailTreatmentPage = Loadable(
+  lazy(() => import('views/treatment-detail'))
+);
+
 // utilities routing
 const UtilsTypography = Loadable(
   lazy(() => import('views/utilities/Typography'))
@@ -41,6 +45,10 @@ const MainRoutes = {
     {
       path: '/accueil',
       element: <DashboardDefault />,
+    },
+    {
+      path: '/treatment/detail/:id',
+      element: <DetailTreatmentPage />,
     },
     {
       path: '/test-api',

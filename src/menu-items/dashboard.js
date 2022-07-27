@@ -17,7 +17,7 @@ const dashboard = {
       type: 'item',
       url: '/accueil',
       icon: icons.IconDashboard,
-      breadcrumbs: false,
+      breadcrumbs: true,
     },
     {
       id: 'test-api',
@@ -25,7 +25,7 @@ const dashboard = {
       type: 'item',
       url: '/test-api',
       icon: icons.IconAdjustments,
-      breadcrumbs: false,
+      breadcrumbs: true,
     },
     {
       id: 'my-profil',
