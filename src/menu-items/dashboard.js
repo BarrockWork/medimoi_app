@@ -1,8 +1,8 @@
 // assets
-import { IconDashboard, IconAdjustments } from '@tabler/icons';
+import {IconDashboard, IconAdjustments, IconUser} from '@tabler/icons';
 
 // constant
-const icons = { IconDashboard, IconAdjustments };
+const icons = { IconDashboard, IconAdjustments, IconUser };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
@@ -25,6 +25,14 @@ const dashboard = {
       type: 'item',
       url: '/test-api',
       icon: icons.IconAdjustments,
+      breadcrumbs: false,
+    },
+    {
+      id: 'my-profil',
+      title: 'Profil',
+      type: 'item',
+      url: '/profil',
+      icon: icons.IconUser,
       breadcrumbs: false,
     },
   ],

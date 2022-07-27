@@ -11,6 +11,7 @@ const DashboardDefault = Loadable(
 
 // App routing
 const TestApiPage = Loadable(lazy(() => import('views/test-api-page')));
+const Profil = Loadable(lazy(() => import('views/user')));
 
 // utilities routing
 const UtilsTypography = Loadable(
@@ -42,6 +43,10 @@ const MainRoutes = {
     {
       path: '/test-api',
       element: <TestApiPage />,
+    },
+    {
+      path: '/profil',
+      element: <Profil />,
     },
     {
       path: '/utils/util-typography',
