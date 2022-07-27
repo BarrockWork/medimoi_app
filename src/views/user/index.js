@@ -15,6 +15,8 @@ import TableRow from "@mui/material/TableRow";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import {NavLink} from "react-router-dom";
+import Tooltip from "@mui/material/Tooltip";
+
 
 // ==============================|| PROFIL USER ||============================== //
 
@@ -79,10 +81,23 @@ const ProfilUser = () => {
                     title="Inscrits depuis"
                     subheader={localDate}
                 />
-                <NavLink to={`/email/${user.email}`}>
-                    <EditIcon style={{ color: 'green' }}/>
-                </NavLink>
-                    <DeleteIcon style={{ color: 'red' }}/>
+                <IconButton>
+                    <NavLink to={`/email/${user.email}`}>
+                        <EditIcon style={{color: 'green'}}/>
+                    </NavLink>
+                </IconButton>
+                <Tooltip title='Désactiver votre compte'>
+                    <IconButton
+                        onClick={() => {
+                            const confirmBox = window.confirm(
+                                'Etes-vous sur de vouloir désactiver votre compte ?'
+                            );
+                            if (confirmBox === true) {
+                            }
+                        }}>
+                        <DeleteIcon style={{color: 'red'}}/>
+                    </IconButton>
+                </Tooltip>
                 <CardContent>
                     <Table>
                         <TableBody>

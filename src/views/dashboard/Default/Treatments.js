@@ -19,7 +19,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import apiAxios from 'utils/axios';
 import { useState, useEffect } from 'react';
-import periodicity from 'views/utilities/Periodicity';
+import Periodicity from 'views/utilities/Periodicity';
 import { NavLink, useNavigate } from 'react-router-dom';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
@@ -323,7 +323,7 @@ export default function EnhancedTable({ titre, isActive }) {
                         </NavLink>
                       </TableCell>
                       <TableCell align='right'>
-                        {periodicity(treatments.treatment_periodicity_id)}
+                        {Periodicity(treatments.treatment_periodicity_id)}
                       </TableCell>
                       <TableCell align='right'>
                         {treatments.startedAt

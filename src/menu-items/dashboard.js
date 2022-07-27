@@ -1,11 +1,12 @@
 // assets
-import {IconDashboard, IconAdjustments, IconUser} from '@tabler/icons';
+import {IconDashboard, IconAdjustments, IconUser, IconEdit} from '@tabler/icons';
 
 // constant
 const icons = { IconDashboard, IconAdjustments, IconUser };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 const id = localStorage.getItem("user-id");
+const email = localStorage.getItem("user-email");
 const dashboard = {
   id: 'dashboard',
   title: 'Accueil',
@@ -30,10 +31,24 @@ const dashboard = {
     {
       id: 'my-profil',
       title: 'Profil',
-      type: 'item',
-      url: `/profil/${id}`,
+      type: 'collapse',
       icon: icons.IconUser,
-      breadcrumbs: false,
+      children: [
+        {
+          id: 'show-user',
+          title: 'Accéder à mon profil',
+          type: 'item',
+          url: `/profil/${id}`,
+          breadcrumbs: true
+        },
+        {
+          id: 'edit-user',
+          title: 'Modifier mon profil',
+          type: 'item',
+          url: `/email/${email}`,
+          breadcrumbs: true
+        }
+      ]
     },
   ],
 };
