@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -20,7 +19,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import apiAxios from 'utils/axios';
 import { useState, useEffect } from 'react';
-import periodicity from 'views/utilities/periodicity';
+import periodicity from 'views/utilities/Periodicity';
+import { NavLink, useNavigate } from 'react-router-dom';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -88,6 +89,7 @@ function EnhancedTableHead(props) {
     rowCount,
     onRequestSort,
   } = props;
+
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -102,7 +104,7 @@ function EnhancedTableHead(props) {
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{
-              'aria-label': 'select all desserts',
+              'aria-label': 'Select line',
             }}
           />
         </TableCell>
@@ -132,13 +134,26 @@ function EnhancedTableHead(props) {
 
 const EnhancedTableToolbar = (props) => {
   const { numSelected, title } = props;
+  const navigate = useNavigate();
 
+  const deactivateTreatment = (table) => {
+    table.map((item) => {
+      apiAxios.put(`http://localhost:4000/api/treatments/${item}`, {
+        isActive: false,
+      });
+      return 'ok';
+    });
+    window.location.reload(false);
+  };
+  const navigateAddTreatments = () => {
+    navigate('/add-treatments');
+  };
   return (
     <Toolbar
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
+        ...(numSelected.length > 0 && {
           bgcolor: (theme) =>
             alpha(
               theme.palette.primary.main,
@@ -146,13 +161,13 @@ const EnhancedTableToolbar = (props) => {
             ),
         }),
       }}>
-      {numSelected > 0 ? (
+      {numSelected.length > 0 ? (
         <Typography
           sx={{ flex: '1 1 100%' }}
           color='inherit'
           variant='subtitle1'
           component='div'>
-          {numSelected} selected
+          {numSelected.length} selected
         </Typography>
       ) : (
         <Typography
@@ -164,23 +179,29 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       )}
 
-      {numSelected > 0 ? (
+      {numSelected.length > 0 ? (
         <Tooltip title='Delete'>
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              const confirmBox = window.confirm(
+                'Etes-vous sur de vouloir supprimer le traitement ?'
+              );
+              if (confirmBox === true) {
+                deactivateTreatment(numSelected);
+              }
+            }}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
       ) : (
         <Tooltip title='Filter list'>
-          <IconButton></IconButton>
+          <IconButton onClick={navigateAddTreatments}>
+            <AddCircleIcon />
+          </IconButton>
         </Tooltip>
       )}
     </Toolbar>
   );
-};
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
 };
 
 export default function EnhancedTable({ titre, isActive }) {
@@ -191,6 +212,8 @@ export default function EnhancedTable({ titre, isActive }) {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [treatments, setTreatments] = useState([]);
   const boolActive = isActive;
+
+  //Appel API
   const getTreatment = async () => {
     const results = await apiAxios.get(
       `/treatments/all?filter={"isActive":${boolActive}}&range=[0,10]&sort=["id","ASC"]`
@@ -210,20 +233,21 @@ export default function EnhancedTable({ titre, isActive }) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = treatments.map((n) => n.name);
+      const newSelecteds = treatments.map((n) => n.id);
       setSelected(newSelecteds);
+
       return;
     }
     setSelected([]);
   };
   const dateFormatter = (date) => new Date(date).toLocaleDateString();
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -234,7 +258,6 @@ export default function EnhancedTable({ titre, isActive }) {
         selected.slice(selectedIndex + 1)
       );
     }
-
     setSelected(newSelected);
   };
 
@@ -256,11 +279,11 @@ export default function EnhancedTable({ titre, isActive }) {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} title={titre} />
+        <EnhancedTableToolbar numSelected={selected} title={titre} />
         <TableContainer>
           <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle'>
             <EnhancedTableHead
-              numSelected={selected.length}
+              numSelected={selected}
               order={order}
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
@@ -273,13 +296,13 @@ export default function EnhancedTable({ titre, isActive }) {
               {stableSort(treatments, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((treatments, index) => {
-                  const isItemSelected = isSelected(treatments.name);
+                  const isItemSelected = isSelected(treatments.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, treatments.name)}
+                      onClick={(event) => handleClick(event, treatments.id)}
                       role='checkbox'
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -294,12 +317,10 @@ export default function EnhancedTable({ titre, isActive }) {
                           }}
                         />
                       </TableCell>
-                      <TableCell
-                        component='th'
-                        id={labelId}
-                        scope='treatments'
-                        padding='none'>
-                        {treatments.name}
+                      <TableCell component='th' id={labelId} scope='treatments'>
+                        <NavLink to={`/treatment/detail/${treatments.id}`}>
+                          {treatments.name}
+                        </NavLink>
                       </TableCell>
                       <TableCell align='right'>
                         {periodicity(treatments.treatment_periodicity_id)}

@@ -6,25 +6,25 @@ import { useSelector } from 'react-redux';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
-    Avatar,
-    Box,
-    Card,
-    CardContent,
-    Chip,
-    ClickAwayListener,
-    Divider,
-    Grid,
-    InputAdornment,
-    List,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    OutlinedInput,
-    Paper,
-    Popper,
-    Stack,
-    Switch,
-    Typography
+  Avatar,
+  Box,
+  Card,
+  CardContent,
+  Chip,
+  ClickAwayListener,
+  Divider,
+  Grid,
+  InputAdornment,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  OutlinedInput,
+  Paper,
+  Popper,
+  Stack,
+  Switch,
+  Typography,
 } from '@mui/material';
 
 // third-party
@@ -44,9 +44,9 @@ import jwtHandler from "../../../../utils/jwtHandler";
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
-    const theme = useTheme();
-    const customization = useSelector((state) => state.customization);
-    const navigate = useNavigate();
+  const theme = useTheme();
+  const customization = useSelector((state) => state.customization);
+  const navigate = useNavigate();
 
     const [sdm, setSdm] = useState(true);
     const [value, setValue] = useState('');
@@ -64,35 +64,33 @@ const ProfileSection = () => {
         navigate("/login", { replace: true });
     };
 
-    const handleClose = (event) => {
-        if (anchorRef.current && anchorRef.current.contains(event.target)) {
-            return;
-        }
-        setOpen(false);
-    };
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+    setOpen(false);
+  };
 
-    const handleListItemClick = (event, index, route = '') => {
-        setSelectedIndex(index);
-        handleClose(event);
+  const handleListItemClick = (event, index, route = '') => {
+    setSelectedIndex(index);
+    handleClose(event);
 
-        if (route && route !== '') {
-            navigate(route);
-        }
-    };
-    const handleToggle = () => {
-        setOpen((prevOpen) => !prevOpen);
-    };
+    if (route && route !== '') {
+      navigate(route);
+    }
+  };
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
 
     const prevOpen = useRef(open);
     useEffect(() => {
-        // console.log(user);
         if (prevOpen.current === true && open === false) {
             anchorRef.current.focus();
         }
 
-        prevOpen.current = open;
-    }, [open]);
-
+    prevOpen.current = open;
+  }, [open]);
     return (
         <>
             <Chip
