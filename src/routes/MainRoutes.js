@@ -16,6 +16,8 @@ const DetailTreatmentPage = Loadable(
   lazy(() => import('views/treatment-detail'))
 );
 
+const AddTreatmentPage = Loadable(lazy(() => import('views/forms/treatments/addTreament')));
+
 // utilities routing
 const UtilsTypography = Loadable(
   lazy(() => import('views/utilities/Typography'))
@@ -46,6 +48,10 @@ const MainRoutes = {
     {
       path: '/treatment/detail/:id',
       element: <DetailTreatmentPage />,
+    },
+    {
+      path: '/add-treatments',
+      element: <AddTreatmentPage />,
     },
     {
       path: '/test-api',

@@ -1,72 +1,47 @@
 // material-ui
-import TextField from '@mui/material/TextField';
 import MainCard from 'ui-component/cards/MainCard';
 import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-
 import { Typography } from '@mui/material';
-
-import apiAxios from '../../utils/axios';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import TextField from '@mui/material/TextField';
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import TreatmentDrugs from './TreatmentDrugs';
-import TreatmentMedia from './TreatmentMedia';
-
-const TreatmentDetail = () => {
+const FormAddTreatment = () => {
   const { id } = useParams();
   const [treatment, setTreatment] = useState([]);
+  const [value, setValue] = useState(new Date('2014-08-18T21:11:54'));
 
-  const getTreatment = async () => {
-    const results = await apiAxios.get(`/treatments/${id}`);
-    setTreatment(results.data);
+  const handleChange = (newValue) => {
+    setValue(newValue);
   };
-
-  useEffect(() => {
-    getTreatment();
-  }, []);
-
-  const dateFormatter = (date) => new Date(date).toLocaleDateString();
 
   return (
     <MainCard title={treatment.name}>
       <Box
+        component='form'
         sx={{
-          '& .MuiTextField-root': { m: 1, width: '25ch' },
-          padding: 3,
-        }}>
+          '& > :not(style)': { m: 1, width: '25ch' },
+        }}
+        noValidate
+        autoComplete='off'>
         <Typography sx={{ padding: 1 }} variant='h2'>
           Periodicité
         </Typography>
-        <TextField
-          id='outlined-multiline-flexible'
-          label='Débute le'
-          multiline
-          maxRows={4}
-          value={
-            dateFormatter(treatment.startedAt) === '1/1/1970'
-              ? 'pas de date renseignée '
-              : dateFormatter(treatment.startedAt)
-          }
-        />{' '}
-        <TextField
-          id='outlined-multiline-flexible'
-          label='Termine le'
-          multiline
-          maxRows={4}
-          value={
-            dateFormatter(treatment.finishedAt) === '1/1/1970'
-              ? 'pas de date de fin '
-              : dateFormatter(treatment.finishedAt)
-          }
-        />
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <DateTimePicker
+            renderInput={(props) => <TextField {...props} />}
+            label='DateTimePicker'
+            value={value}
+            onChange={(newValue) => {
+              setValue(newValue);
+            }}
+          />
+        </LocalizationProvider>
       </Box>
-      <Box sx={{ padding: 3 }}>
+      {/* <Box sx={{ padding: 3 }}>
         {' '}
         <Typography sx={{ padding: 1 }} variant='h2'>
           Medicaments
@@ -121,9 +96,9 @@ const TreatmentDetail = () => {
             </Table>
           </TableContainer>
         )}
-      </Box>
+      </Box> */}
     </MainCard>
   );
 };
 
-export default TreatmentDetail;
+export default FormAddTreatment;
