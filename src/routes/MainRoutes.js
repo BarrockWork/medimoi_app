@@ -3,6 +3,7 @@ import { lazy } from 'react';
 // project imports
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
+import ProtectedRoute from "../utils/protectedRoute";
 
 // dashboard routing
 const DashboardDefault = Loadable(
@@ -29,7 +30,9 @@ const UtilsTablerIcons = Loadable(
 
 const MainRoutes = {
   path: '/',
-  element: <MainLayout />,
+  element: (<ProtectedRoute>
+              <MainLayout />
+            </ProtectedRoute>),
   children: [
     {
       path: '/',
