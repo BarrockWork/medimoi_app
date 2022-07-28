@@ -1,5 +1,5 @@
 // material-ui
-import {Avatar, Card, CardContent, CardHeader, CircularProgress, IconButton, Link, Typography,} from '@mui/material';
+import {Avatar, Card, CardContent, CardHeader, CircularProgress, IconButton, Link,} from '@mui/material';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import PersonIcon from '@mui/icons-material/Person';
@@ -28,10 +28,11 @@ const ProfilUser = () => {
     const [error, setError] = useState(false);
     const [user, setUser] = useState([]);
     const [loading, setLoading] = useState(true);
-    const id = localStorage.getItem("user-id");
+    const storage = JSON.parse(window.localStorage.getItem('app_user'));
+
     const getUser = async () => {
         try {
-            const results = await apiAxios.get(`/users/${id}`)
+            const results = await apiAxios.get(`/users/${storage.id}`)
             setUser(results.data);
             setLoading(false);
         } catch (err) {
@@ -62,16 +63,18 @@ const ProfilUser = () => {
     }
 
     const localDate = new Date(user.createdAt).toLocaleDateString();
-    let initials = user.firstName
 
 
     return (<MainCard title={user.firstName + " " + user.lastName} align='center'>
             <Card sx={{maxWidth: 800}}>
                 <CardHeader
                     avatar={
-                        <Avatar aria-label="recipe">
-                            {initials}
-                        </Avatar>
+                        <Avatar
+                            sx={{
+                                bgcolor: '#e7c7ca',
+                            }}
+                        >{user.firstName.slice(0,1)} {user.lastName.slice(0,1)}</Avatar>
+
                     }
                     action={
                         <IconButton aria-label="settings">

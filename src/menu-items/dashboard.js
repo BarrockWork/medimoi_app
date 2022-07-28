@@ -5,8 +5,7 @@ import {IconDashboard, IconAdjustments, IconUser, IconEdit} from '@tabler/icons'
 const icons = { IconDashboard, IconAdjustments, IconUser };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
-const id = localStorage.getItem("user-id");
-const email = localStorage.getItem("user-email");
+const storage = JSON.parse(window.localStorage.getItem('app_user'));
 const dashboard = {
   id: 'dashboard',
   title: 'Accueil',
@@ -38,14 +37,14 @@ const dashboard = {
           id: 'show-user',
           title: 'Accéder à mon profil',
           type: 'item',
-          url: `/profil/${id}`,
+          url: `/profil/${storage.id}`,
           breadcrumbs: true
         },
         {
           id: 'edit-user',
           title: 'Modifier mon profil',
           type: 'item',
-          url: `/email/${email}`,
+          url: `/email/${storage.email}`,
           breadcrumbs: true
         }
       ]
