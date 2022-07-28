@@ -69,12 +69,13 @@ const Login = () => {
                                         <Grid item container direction="column" alignItems="center" xs={12}>
                                             <Typography
                                                 component={Link}
-                                                to={'/landingPage'}
+                                                to={'/#'}
                                                 variant="subtitle1"
                                                 sx={{ textDecoration: 'none' }}
                                             >
-                                                Vous n'avez pas de compte ? Inscrivez-vous ici !
+                                                Vous n'avez pas de compte ? Inscrivez-vous
                                             </Typography>
+                                            <a href='http://localhost:4020'>ici</a>
                                         </Grid>
                                     </Grid>
                                 </Grid>
