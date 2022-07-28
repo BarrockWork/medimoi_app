@@ -23,6 +23,7 @@ import periodicity from 'views/utilities/Periodicity';
 import { NavLink, useNavigate } from 'react-router-dom';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import jwtHandler from 'utils/jwtHandler';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -221,10 +222,12 @@ export default function EnhancedTable({ titre, isActive }) {
   const boolActive = isActive;
   const navigate = useNavigate();
 
+  const user = jwtHandler.getUserInfo();
+
   //Appel API
   const getTreatment = async () => {
     const results = await apiAxios.get(
-      `/treatments/all?filter={"isActive":${boolActive}}&range=[0,10]&sort=["id","ASC"]`
+      `/treatments/all?filter={"isActive":${boolActive},"user_id":${user.id}}&range=[0,10]&sort=["id","ASC"]`
     );
     setTreatments(results.data);
   };
