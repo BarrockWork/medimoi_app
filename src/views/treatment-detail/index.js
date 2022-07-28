@@ -8,6 +8,10 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
 
 import { Typography } from '@mui/material';
 
@@ -65,7 +69,20 @@ const TreatmentDetail = () => {
               : dateFormatter(treatment.finishedAt)
           }
         />
+        <FormControl fullWidth>
+          <InputLabel id='demo-simple-select-label'>Age</InputLabel>
+          <Select
+            labelId='demo-simple-select-label'
+            id='demo-simple-select'
+            value='test'
+            label='Age'>
+            <MenuItem value={10}>Ten</MenuItem>
+            <MenuItem value={20}>Twenty</MenuItem>
+            <MenuItem value={30}>Thirty</MenuItem>
+          </Select>
+        </FormControl>
       </Box>
+
       <Box sx={{ padding: 3 }}>
         {' '}
         <Typography sx={{ padding: 1 }} variant='h2'>
@@ -114,7 +131,6 @@ const TreatmentDetail = () => {
               </TableHead>
               <TableBody>
                 {treatment.TreatmentMedias.map((value) => {
-                  console.log(value.id);
                   return <TreatmentMedia id={value.id} />;
                 })}
               </TableBody>

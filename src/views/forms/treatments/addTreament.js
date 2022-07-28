@@ -6,24 +6,68 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import TextField from '@mui/material/TextField';
-import { useParams } from 'react-router-dom';
-import { useState } from 'react';
+import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import { useState, useEffect } from 'react';
+
+import apiAxios from 'utils/axios';
+
+import { useFormik } from 'formik';
+import axios from 'axios';
 
 const FormAddTreatment = () => {
-  const { id } = useParams();
-  const [treatment, setTreatment] = useState([]);
-  const [value, setValue] = useState(new Date('2014-08-18T21:11:54'));
+  const [periodicity, setPeriodicity] = useState('');
+  const [loading, setLoading] = useState(true);
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      user_id: 1,
+      treatment_periodicity_id: '',
+      startedAt: null,
+      finishedAt: null,
+      isActive: true,
+    },
+  });
 
-  const handleChange = (newValue) => {
-    setValue(newValue);
+  const getPeriodicity = async () => {
+    const results = await apiAxios.get(`/treatment_periodicities/many`);
+    setPeriodicity(results.data);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getPeriodicity();
+  }, []);
+
+  const sendData = async (values) => {
+    console.log('value', values);
+    await axios.post('/treatments/new', values);
+
+    return;
   };
 
   return (
-    <MainCard title={treatment.name}>
+    <MainCard title="AJOUT D'UN TRAITEMENT">
+      <Box sx={{ '& > :not(style)': { m: 1, width: '25ch' }, padding: 1 }}>
+        <Typography sx={{ padding: 1 }} variant='h2'>
+          Nom du traitement
+        </Typography>
+        <TextField
+          id='name'
+          label='name'
+          variant='outlined'
+          value={formik.values.name}
+          onChange={formik.handleChange}
+        />
+      </Box>
       <Box
         component='form'
         sx={{
           '& > :not(style)': { m: 1, width: '25ch' },
+          padding: 1,
         }}
         noValidate
         autoComplete='off'>
@@ -33,70 +77,53 @@ const FormAddTreatment = () => {
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DateTimePicker
             renderInput={(props) => <TextField {...props} />}
-            label='DateTimePicker'
-            value={value}
-            onChange={(newValue) => {
-              setValue(newValue);
+            label='Traitement commence le'
+            value={formik.values.startedAt}
+            onChange={(val) => {
+              formik.setFieldValue('startedAt', val);
+            }}
+          />
+          <DateTimePicker
+            renderInput={(props) => <TextField {...props} />}
+            label='Traitement termine le'
+            value={formik.values.finishedAt}
+            onChange={(val) => {
+              formik.setFieldValue('finishedAt', val);
             }}
           />
         </LocalizationProvider>
       </Box>
-      {/* <Box sx={{ padding: 3 }}>
-        {' '}
-        <Typography sx={{ padding: 1 }} variant='h2'>
-          Medicaments
-        </Typography>
-        {treatment.TreatmentDrugs === undefined ||
-        treatment.TreatmentDrugs.length === 0 ? (
-          'Pas de médicament enregistré'
-        ) : (
-          <TableContainer>
-            <Table sx={{ minWidth: 650 }} aria-label='simple table'>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Medicament</TableCell>
-                  <TableCell align='right'>Mode d'administration</TableCell>
-                  <TableCell align='right'>Type de medicament</TableCell>
-                  <TableCell align='right'>Niveau du medicament</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {treatment.TreatmentDrugs.map((value) => {
-                  // console.log(value.originalName);
-                  return <TreatmentDrugs id={value.id} />;
+      <Box sx={{ padding: 2 }}>
+        <FormControl fullWidth>
+          <InputLabel id='demo-simple-select-label'>Selectionner</InputLabel>
+          <Select
+            labelId='demo-simple-select-label'
+            id='demo-simple-select'
+            value={formik.values.treatment_periodicity_id}
+            label='periodiciter'
+            onChange={(v) => {
+              formik.setFieldValue('treatment_periodicity_id', v.target.value);
+            }}>
+            {loading === true
+              ? console.log('loading')
+              : periodicity.map((v) => {
+                  return <MenuItem value={v.id}>{v.name}</MenuItem>;
                 })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
+          </Select>
+        </FormControl>
       </Box>
-      <Box sx={{ padding: 3 }}>
-        <Typography sx={{ padding: 1 }} variant='h2'>
-          Pieces jointes
-        </Typography>
-
-        {treatment.TreatmentMedias === undefined ||
-        treatment.TreatmentMedias.length === 0 ? (
-          'Pas de média enregistré'
-        ) : (
-          <TableContainer>
-            <Table sx={{ minWidth: 650 }} aria-label='simple table'>
-              <TableHead>
-                <TableRow>
-                  <TableCell align='center'>Nom du fichier</TableCell>
-                  <TableCell align='center'>Taille du fichier</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {treatment.TreatmentMedias.map((value) => {
-                  console.log(value.id);
-                  return <TreatmentMedia id={value.id} />;
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
-      </Box> */}
+      {console.log(formik.values)}
+      <Box sx={{ padding: 2 }}>
+        <Button
+          size='large'
+          color='primary'
+          variant='contained'
+          onClick={() => {
+            sendData(formik.values);
+          }}>
+          Submit
+        </Button>
+      </Box>
     </MainCard>
   );
 };
