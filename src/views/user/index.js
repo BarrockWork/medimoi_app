@@ -3,10 +3,10 @@ import {Avatar, Card, CardContent, CardHeader, CircularProgress, IconButton, Lin
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import PersonIcon from '@mui/icons-material/Person';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import CakeIcon from '@mui/icons-material/Cake';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
+import jwtHandler from "../../utils/jwtHandler";
 
 import apiAxios from "../../utils/axios";
 import {useEffect, useState} from "react";
@@ -14,8 +14,7 @@ import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import {NavLink} from "react-router-dom";
-import Tooltip from "@mui/material/Tooltip";
+
 
 
 // ==============================|| PROFIL USER ||============================== //
@@ -28,11 +27,11 @@ const ProfilUser = () => {
     const [error, setError] = useState(false);
     const [user, setUser] = useState([]);
     const [loading, setLoading] = useState(true);
-    const storage = JSON.parse(window.localStorage.getItem('app_user'));
+    const userConnected = jwtHandler.getUser().user;
 
     const getUser = async () => {
         try {
-            const results = await apiAxios.get(`/users/${storage.id}`)
+            const results = await apiAxios.get(`/users/${userConnected.id}`)
             setUser(results.data);
             setLoading(false);
         } catch (err) {
@@ -68,49 +67,40 @@ const ProfilUser = () => {
     return (<MainCard title={user.firstName + " " + user.lastName} align='center'>
             <Card sx={{maxWidth: 800}}>
                 <CardHeader
-                    avatar={
-                        <Avatar
-                            sx={{
-                                bgcolor: '#e7c7ca',
-                            }}
-                        >{user.firstName.slice(0,1)} {user.lastName.slice(0,1)}</Avatar>
-
-                    }
                     action={
                         <IconButton aria-label="settings">
                             <MoreVertIcon/>
                         </IconButton>
                     }
-                    title="Inscrits depuis"
+                    title="Inscrits depuis le "
                     subheader={localDate}
                 />
-                <IconButton>
-                    <NavLink to={`/email/${user.email}`}>
-                        <EditIcon style={{color: 'green'}}/>
-                    </NavLink>
-                </IconButton>
-                <Tooltip title='Désactiver votre compte'>
-                    <IconButton
-                        onClick={() => {
-                            const confirmBox = window.confirm(
-                                'Etes-vous sur de vouloir désactiver votre compte ?'
-                            );
-                            if (confirmBox === true) {
-                            }
-                        }}>
-                        <DeleteIcon style={{color: 'red'}}/>
-                    </IconButton>
-                </Tooltip>
                 <CardContent>
                     <Table>
                         <TableBody>
+                            <TableRow
+                                key={user.age}
+                                sx={{'&:last-child td, &:last-child th': {border: 0}}}>
+                                <TableCell component='th' scope='row' align='center'>
+                                    <CakeIcon/>
+                                </TableCell>
+                                <TableCell align='center'>{user.age} ans</TableCell>
+                            </TableRow>
                             <TableRow
                                 key={user.cellphone}
                                 sx={{'&:last-child td, &:last-child th': {border: 0}}}>
                                 <TableCell component='th' scope='row' align='center'>
                                     <ContactPhoneIcon/>
                                 </TableCell>
-                                <TableCell align='center'>{user.cellphone}</TableCell>
+                                <TableCell align='center'>N° perso : {user.cellphone}</TableCell>
+                            </TableRow>
+                            <TableRow
+                                key={user.cellphone}
+                                sx={{'&:last-child td, &:last-child th': {border: 0}}}>
+                                <TableCell component='th' scope='row' align='center'>
+                                    <ContactPhoneIcon/>
+                                </TableCell>
+                                <TableCell align='center'>N° fixe : {user.homephone}</TableCell>
                             </TableRow>
                             <TableRow
                                 key={user.email}

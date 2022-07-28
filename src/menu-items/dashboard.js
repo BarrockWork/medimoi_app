@@ -6,6 +6,7 @@ const icons = { IconDashboard, IconAdjustments, IconUser };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 const storage = JSON.parse(window.localStorage.getItem('app_user'));
+console.log(storage)
 const dashboard = {
   id: 'dashboard',
   title: 'Accueil',
