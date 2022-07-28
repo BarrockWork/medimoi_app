@@ -22,6 +22,7 @@ import { useState, useEffect } from 'react';
 import periodicity from 'views/utilities/Periodicity';
 import { NavLink, useNavigate } from 'react-router-dom';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -77,6 +78,12 @@ const headCells = [
     numeric: true,
     disablePadding: false,
     label: 'Termnine le',
+  },
+  {
+    id: 'edit',
+    numeric: true,
+    disablePadding: false,
+    label: 'Action',
   },
 ];
 
@@ -212,6 +219,7 @@ export default function EnhancedTable({ titre, isActive }) {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [treatments, setTreatments] = useState([]);
   const boolActive = isActive;
+  const navigate = useNavigate();
 
   //Appel API
   const getTreatment = async () => {
@@ -219,6 +227,10 @@ export default function EnhancedTable({ titre, isActive }) {
       `/treatments/all?filter={"isActive":${boolActive}}&range=[0,10]&sort=["id","ASC"]`
     );
     setTreatments(results.data);
+  };
+
+  const navigateEditTreatments = (id) => {
+    navigate(`/edit-treatments/${id}`);
   };
 
   useEffect(() => {
@@ -334,6 +346,22 @@ export default function EnhancedTable({ titre, isActive }) {
                         {treatments.finishedAt
                           ? dateFormatter(treatments.finishedAt)
                           : ''}
+                      </TableCell>
+                      <TableCell align='right'>
+                        <IconButton
+                          color='primary'
+                          aria-label='upload picture'
+                          component='label'>
+                          {treatments.isActive ? (
+                            <ModeEditIcon
+                              onClick={() =>
+                                navigateEditTreatments(treatments.id)
+                              }
+                            />
+                          ) : (
+                            ''
+                          )}
+                        </IconButton>
                       </TableCell>
                     </TableRow>
                   );

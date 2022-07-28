@@ -11,57 +11,78 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
+import CircularProgress from '@mui/material/CircularProgress';
+
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+
+import React from 'react';
 
 import apiAxios from 'utils/axios';
 
 import { useFormik } from 'formik';
-import axios from 'axios';
 
-const FormAddTreatment = () => {
+const FormEditTreatment = () => {
+  const { id } = useParams();
+
   const [periodicity, setPeriodicity] = useState('');
+  const [treatment, setTreatment] = useState([]);
   const [loading, setLoading] = useState(true);
   const formik = useFormik({
     initialValues: {
-      name: '',
+      name: treatment.name,
       user_id: 1,
       treatment_periodicity_id: '',
       startedAt: null,
       finishedAt: null,
       isActive: true,
+      // files: null,
     },
   });
 
   const getPeriodicity = async () => {
     const results = await apiAxios.get(`/treatment_periodicities/many`);
+    const result2 = await apiAxios.get(`/treatments/${id}`);
+
     setPeriodicity(results.data);
+    setTreatment(result2.data);
     setLoading(false);
   };
 
   useEffect(() => {
     getPeriodicity();
+    console.log(loading);
   }, []);
 
   const sendData = async (values) => {
-    console.log('value', values);
-    await axios.post('/treatments/new', values);
-
-    return;
+    // const result = await apiAxios.post('/treatments/new', values);
+    console.log(values);
+    return Promise.resolve();
   };
 
   return (
-    <MainCard title="AJOUT D'UN TRAITEMENT">
+    <MainCard title="EDITION D'UN TRAITEMENT">
       <Box sx={{ '& > :not(style)': { m: 1, width: '25ch' }, padding: 1 }}>
         <Typography sx={{ padding: 1 }} variant='h2'>
           Nom du traitement
         </Typography>
-        <TextField
-          id='name'
-          label='name'
-          variant='outlined'
-          value={formik.values.name}
-          onChange={formik.handleChange}
-        />
+        {!loading ? (
+          <TextField
+            id='name'
+            label='name'
+            variant='outlined'
+            value={treatment.name}
+            onChange={formik.handleChange}
+          />
+        ) : (
+          <TextField
+            id='name'
+            label='name'
+            variant='outlined'
+            value={formik.values.name}
+            onChange={formik.handleChange}
+          />
+        )}
       </Box>
       <Box
         component='form'
@@ -72,7 +93,7 @@ const FormAddTreatment = () => {
         noValidate
         autoComplete='off'>
         <Typography sx={{ padding: 1 }} variant='h2'>
-          Periodicité
+          Date du traitement
         </Typography>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DateTimePicker
@@ -94,6 +115,9 @@ const FormAddTreatment = () => {
         </LocalizationProvider>
       </Box>
       <Box sx={{ padding: 2 }}>
+        <Typography sx={{ padding: 1 }} variant='h2'>
+          Périodicité
+        </Typography>
         <FormControl fullWidth>
           <InputLabel id='demo-simple-select-label'>Selectionner</InputLabel>
           <Select
@@ -104,15 +128,16 @@ const FormAddTreatment = () => {
             onChange={(v) => {
               formik.setFieldValue('treatment_periodicity_id', v.target.value);
             }}>
-            {loading === true
-              ? console.log('loading')
-              : periodicity.map((v) => {
-                  return <MenuItem value={v.id}>{v.name}</MenuItem>;
-                })}
+            {loading === true ? (
+              <CircularProgress />
+            ) : (
+              periodicity.map((v) => {
+                return <MenuItem value={v.id}>{v.name}</MenuItem>;
+              })
+            )}
           </Select>
         </FormControl>
       </Box>
-      {console.log(formik.values)}
       <Box sx={{ padding: 2 }}>
         <Button
           size='large'
@@ -124,8 +149,9 @@ const FormAddTreatment = () => {
           Submit
         </Button>
       </Box>
+      {console.log(treatment)}
     </MainCard>
   );
 };
 
-export default FormAddTreatment;
+export default FormEditTreatment;

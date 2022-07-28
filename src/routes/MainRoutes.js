@@ -3,7 +3,7 @@ import { lazy } from 'react';
 // project imports
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
-import ProtectedRoute from "../utils/protectedRoute";
+import ProtectedRoute from '../utils/protectedRoute';
 
 // dashboard routing
 const DashboardDefault = Loadable(
@@ -17,7 +17,12 @@ const DetailTreatmentPage = Loadable(
   lazy(() => import('views/treatment-detail'))
 );
 
-const AddTreatmentPage = Loadable(lazy(() => import('views/forms/treatments/addTreament')));
+const AddTreatmentPage = Loadable(
+  lazy(() => import('views/forms/treatments/addTreatment'))
+);
+const EditTreatmentPage = Loadable(
+  lazy(() => import('views/forms/treatments/editTreatment'))
+);
 
 // utilities routing
 const UtilsTypography = Loadable(
@@ -36,9 +41,11 @@ const UtilsTablerIcons = Loadable(
 
 const MainRoutes = {
   path: '/',
-  element: (<ProtectedRoute>
-              <MainLayout />
-            </ProtectedRoute>),
+  element: (
+    <ProtectedRoute>
+      <MainLayout />
+    </ProtectedRoute>
+  ),
   children: [
     {
       path: '/',
@@ -55,6 +62,10 @@ const MainRoutes = {
     {
       path: '/add-treatments',
       element: <AddTreatmentPage />,
+    },
+    {
+      path: '/edit-treatments/:id',
+      element: <EditTreatmentPage />,
     },
     {
       path: '/test-api',
