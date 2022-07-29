@@ -19,14 +19,14 @@ const dashboard = {
       icon: icons.IconDashboard,
       breadcrumbs: true,
     },
-    {
-      id: 'test-api',
-      title: 'Test-api',
-      type: 'item',
-      url: '/test-api',
-      icon: icons.IconAdjustments,
-      breadcrumbs: true,
-    },
+    // {
+    //   id: 'test-api',
+    //   title: 'Test-api',
+    //   type: 'item',
+    //   url: '/test-api',
+    //   icon: icons.IconAdjustments,
+    //   breadcrumbs: true,
+    // },
   ],
 };
 
